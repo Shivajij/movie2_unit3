@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>movie app</title>
+    <style>
+        
+#search{
+    margin: 50px;
+    height: 20px;
+    text-align: center;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-left: 40%;
+}
+#data > div{
+    display: flex;
+    height: 600px;
+    align-items: center;
+}
+img{
+    width: 50%;
+    height: 490px;
+}
+button{
+    border-radius: 20px;
+}
+    </style>
+    <!-- <link rel="stylesheet" href="index.css"> -->
+</head>
+<body>
+    <input id="search">
+    <button id="btn" onclick="findData()">Search</button>
+    <div id="data"></div>
+    <div id="error"></div>
+
+</body>
+</html>
+<!-- <script src="index.js"></script> -->
+<script>
+    
+
+function findData(){
+
+let container = document.getElementById("data");
+container.innerHTML=null;
+let search=document.getElementById("search").value;
+
+const url="http://omdbapi.com/?t="+search+"&apikey=b4fdb7b7";
+fetch(url)
+  .then(function (res) {
+    return res.json();
+  })
+  .then(function (res) {
+    console.log(res)
+      append(res);
+  })
+  .catch(function (err){
+      console.log("err:",err);
+  });
+
+function append(d) {
+    let div = document.createElement("div");
+    
+        let img = document.createElement("img");
+        img.src = d.Poster;
+        let div1=document.createElement("div");
+        div1.className="main";
+            let name = document.createElement("h1");
+            name.innerText = d.Title;
+            let actors = document.createElement("p");
+            actors.innerText = "Actors: "+d.Actors;
+            let awards = document.createElement("p");
+            awards.innerText = "Awards: "+d.Awards;
+            let director = document.createElement("p");
+            director.innerText = "Director: "+d.Director;
+            let language = document.createElement("p");
+            language.innerText = "Language: "+d.Language;
+            let ratings = document.createElement("p");
+            ratings.innerText = "Ratings: "+d.Ratings[0].Value;
+            let release = document.createElement("p");
+            release.innerText = "Release Date: "+d.Released;
+            let writer = document.createElement("p");
+            writer.innerText = "Writer: "+d.Writer;
+            let genre = document.createElement("p");
+            genre.innerText = "Genre: "+d.Genre;
+
+        div1.append(name, ratings, release , actors, director, awards,language, writer, genre)
+
+      div.append(img, div1)
+
+    container.appendChild(div);
+}
+
+
+async function main(){
+    try{
+        let data=await getMovie();
+        console.log(data);
+        if(data===undefined){
+            container.innerHTML=null;
+            error.innerHTML=null;
+            let err=document.createElement("h2");
+            err.innerText="eror";
+            let img=document.createElement("img")
+            img.src="https://i0.wp.com/learn.onemonth.com/wp-content/uploads/2017/08/1-10.png?fit=845%2C503&ssl=1";
+            error.append(err,img)
+            // return false;
+        }
+        appendMovie(data);
+      
+    }catch(error){
+        console.log("error:",error);
+    }
+}
+function devounce(func,delay){
+    if(timerid){
+        clearImeout(timerid);
+    }
+    timerid=setTimeout(function(){
+        func();
+    },delay);
+}
+}
+</script>
